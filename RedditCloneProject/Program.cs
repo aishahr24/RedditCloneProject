@@ -9,6 +9,6 @@ builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://localhost:5149/") });
-builder.Services.AddScoped<ApiService>(); // Sørg for ApiService er tilføjet her!
+builder.Services.AddScoped<ApiService>(); 
 
 await builder.Build().RunAsync();
