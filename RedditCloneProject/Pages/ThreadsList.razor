@@ -1,0 +1,52 @@
+@page "/threads"
+@using Core.Model
+@using RedditCloneProject.Data
+
+@inject ApiService apiService
+@inject NavigationManager Navigation
+
+<h3>Tråde</h3>
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <p style="color: red;">Fejl: @errorMessage</p>
+}
+
+@if (threads == null)
+{
+    <p><em>Henter tråde...</em></p>
+}
+else if (threads.Count == 0)
+{
+    <p>Ingen tråde fundet.</p>
+}
+else
+{
+    <ul>
+        @foreach (var thread in threads)
+        {
+            <li>
+                <strong>@thread.Title</strong> - @thread.Content  
+                <br />
+                <small>Forfatter: @thread.Author | Oprettet: @thread.CreationDate</small>
+            </li>
+        }
+    </ul>
+}
+
+@code {
+    private List<ThreadPost>? threads;
+    private string? errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            threads = await apiService.GetThreadsPostAsync();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "Kunne ikke hente tråde. API-fejl: " + ex.Message;
+        }
+    }
+}

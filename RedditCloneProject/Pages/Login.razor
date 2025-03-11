@@ -1,0 +1,44 @@
+@page "/login"
+@using RedditCloneProject.Data
+@inject ApiService apiService
+@inject NavigationManager Navigation
+
+<h3>Login</h3>
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <p style="color: red;">@errorMessage</p>
+}
+
+<div>
+    <label for="username">Username:</label>
+    <input @bind="username" id="username" type="text" class="form-control"/>
+</div>
+
+<div>
+    <label for="password">Password:</label>
+    <input @bind="password" id="password" type="password" class="form-control"/>
+</div>
+
+<button class="btn btn-primary mt-3" @onclick="SubmitLogin">Login</button>
+
+@code {
+    private string username = "";
+    private string password = "";
+    private string? errorMessage;
+
+    private async Task SubmitLogin()
+    {
+        errorMessage = "";
+        var success = await apiService.LoginAsync(username, password);
+        
+        if (success)
+        {
+            Navigation.NavigateTo("/threads"); 
+        }
+        else
+        {
+            errorMessage = "Login fejlede! Prøv igen.";
+        }
+    }
+}
